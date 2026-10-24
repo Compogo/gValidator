@@ -13,7 +13,7 @@ func NewManager[T any](validators ...Validator[T]) *Manager[T] {
 	return &Manager[T]{validators: validators}
 }
 
-func (m *Manager[T]) ValidateMany(ts ...T) error {
+func (m *Manager[T]) ValidateMany(ts ...*T) error {
 	var errs []error
 	for index, t := range ts {
 		if err := m.Validate(t); err != nil {
@@ -28,7 +28,7 @@ func (m *Manager[T]) ValidateMany(ts ...T) error {
 	return nil
 }
 
-func (m *Manager[T]) Validate(t T) error {
+func (m *Manager[T]) Validate(t *T) error {
 	var errs []error
 
 	for _, validator := range m.validators {
