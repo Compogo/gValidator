@@ -1,11 +1,13 @@
 package gValidator
 
+import "context"
+
 type Validator[T any] interface {
-	Validate(*T) error
+	Validate(context.Context, *T) error
 }
 
-type ValidateFunc[T any] func(*T) error
+type ValidateFunc[T any] func(context.Context, *T) error
 
-func (v ValidateFunc[T]) Validate(t *T) error {
-	return v(t)
+func (v ValidateFunc[T]) Validate(ctx context.Context, t *T) error {
+	return v(ctx, t)
 }

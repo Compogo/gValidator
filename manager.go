@@ -1,6 +1,7 @@
 package gValidator
 
 import (
+	"context"
 	"errors"
 	"fmt"
 )
@@ -13,10 +14,10 @@ func NewManager[T any](validators ...Validator[T]) *Manager[T] {
 	return &Manager[T]{validators: validators}
 }
 
-func (m *Manager[T]) ValidateMany(ts ...*T) error {
+func (m *Manager[T]) ValidateMany(ctx context.Context, ts ...*T) error {
 	var errs []error
 	for index, t := range ts {
-		if err := m.Validate(t); err != nil {
+		if err := m.Validate(ctx, t); err != nil {
 			errs = append(errs, fmt.Errorf("record index: %d, validate error: %w", index, err))
 		}
 	}
@@ -28,11 +29,11 @@ func (m *Manager[T]) ValidateMany(ts ...*T) error {
 	return nil
 }
 
-func (m *Manager[T]) Validate(t *T) error {
+func (m *Manager[T]) Validate(ctx context.Context, t *T) error {
 	var errs []error
 
 	for _, validator := range m.validators {
-		if err := validator.Validate(t); err != nil {
+		if err := validator.Validate(ctx, t); err != nil {
 			errs = append(errs, err)
 		}
 	}
