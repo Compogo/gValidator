@@ -14,6 +14,11 @@ func NewManager[T any](validators ...Validator[T]) *Manager[T] {
 	return &Manager[T]{validators: validators}
 }
 
+// AddValidator добавляет валидаторы после создания менеджера, не потокобезопасный
+func (m *Manager[T]) AddValidator(validators ...Validator[T]) {
+	m.validators = append(m.validators, validators...)
+}
+
 func (m *Manager[T]) ValidateMany(ctx context.Context, ts ...*T) error {
 	var errs []error
 	for index, t := range ts {
