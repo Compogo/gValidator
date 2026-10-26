@@ -49,3 +49,7 @@ func (m *Manager[T]) Validate(ctx context.Context, new, old *T) error {
 
 	return nil
 }
+
+func (m *Manager[T]) Len() int {
+	return len(m.validators)
+}
