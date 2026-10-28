@@ -23,7 +23,7 @@ func (m *Manager[T]) ValidateMany(ctx context.Context, ts ...*T) error {
 	var errs []error
 	for index, t := range ts {
 		if err := m.Validate(ctx, t, nil); err != nil {
-			errs = append(errs, fmt.Errorf("record index: %d, validate error: %w", index, err))
+			errs = append(errs, fmt.Errorf("record index: %d, %w - %w", index, ValidateErr, err))
 		}
 	}
 
@@ -44,7 +44,7 @@ func (m *Manager[T]) Validate(ctx context.Context, new, old *T) error {
 	}
 
 	if len(errs) > 0 {
-		return errors.Join(errs...)
+		return errors.Join(ValidateErr, errors.Join(errs...))
 	}
 
 	return nil
